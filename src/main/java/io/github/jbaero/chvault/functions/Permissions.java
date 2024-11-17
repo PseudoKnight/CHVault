@@ -12,6 +12,7 @@ import com.laytonsmith.core.constructs.Target;
 import com.laytonsmith.core.environments.Environment;
 import com.laytonsmith.core.exceptions.CRE.CREFormatException;
 import com.laytonsmith.core.exceptions.CRE.CREInvalidPluginException;
+import com.laytonsmith.core.exceptions.CRE.CRENotFoundException;
 import com.laytonsmith.core.exceptions.CRE.CREThrowable;
 import com.laytonsmith.core.exceptions.ConfigRuntimeException;
 import com.laytonsmith.core.natives.interfaces.Mixed;
@@ -44,8 +45,12 @@ public class Permissions {
 		return perms;
 	}
 
-	public static OfflinePlayer op(MCOfflinePlayer src) {
-		return (OfflinePlayer) src.getHandle();
+	public static OfflinePlayer offlinePlayer(Mixed arg, Target t) {
+		MCOfflinePlayer user = Static.GetUser(arg, t);
+		if(user == null) {
+			throw new CRENotFoundException("Failed to get an offline player for \"" + arg + "\"", t);
+		}
+		return (OfflinePlayer) user.getHandle();
 	}
 
 	@api
@@ -53,17 +58,19 @@ public class Permissions {
 
 		@Override
 		public Class<? extends CREThrowable>[] thrown() {
-			return new Class[]{CREFormatException.class, CREInvalidPluginException.class};
+			return new Class[]{CRENotFoundException.class, CREFormatException.class, CREInvalidPluginException.class};
 		}
 
 		@Override
 		public Mixed exec(Target t, Environment env, Mixed... args) throws ConfigRuntimeException {
-			MCOfflinePlayer user = Static.GetUser(args[0], t);
+			if(args[0].val().equals(Static.getConsoleName())) {
+				return CBoolean.get(Static.getServer().getConsole().hasPermission(args[1].val()));
+			}
 			String world = null;
 			if (args.length == 3) {
 				world = args[2].val();
 			}
-			return CBoolean.get(getPerms(t).playerHas(world, op(user), args[1].val()));
+			return CBoolean.get(getPerms(t).playerHas(world, offlinePlayer(args[0], t), args[1].val()));
 		}
 
 		@Override
@@ -88,7 +95,7 @@ public class Permissions {
 
 		@Override
 		public Class<? extends CREThrowable>[] thrown() {
-			return new Class[0];
+			return new Class[]{CRENotFoundException.class, CREFormatException.class, CREInvalidPluginException.class};
 		}
 
 		@Override
@@ -97,12 +104,14 @@ public class Permissions {
 				throw new CREInvalidPluginException("Your permissions plugin does not appear to support groups.", t);
 			}
 			CArray ret = new CArray(t);
-			MCOfflinePlayer offlinePlayer = Static.GetUser(args[0], t);
+			if(args[0].val().equals(Static.getConsoleName())) {
+				return ret;
+			}
 			String world = null;
 			if (args.length == 2) {
 				world = args[1].val();
 			}
-			for (String group : getPerms(t).getPlayerGroups(world, op(offlinePlayer))) {
+			for (String group : getPerms(t).getPlayerGroups(world, offlinePlayer(args[0], t))) {
 				ret.push(new CString(group, t), t);
 			}
 			return ret;
