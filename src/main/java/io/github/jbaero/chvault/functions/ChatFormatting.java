@@ -1,10 +1,12 @@
 package io.github.jbaero.chvault.functions;
 
+import com.laytonsmith.abstraction.MCOfflinePlayer;
 import com.laytonsmith.annotations.api;
 import com.laytonsmith.core.Static;
 import com.laytonsmith.core.constructs.CString;
 import com.laytonsmith.core.constructs.Target;
 import com.laytonsmith.core.environments.Environment;
+import com.laytonsmith.core.exceptions.CRE.CRENotFoundException;
 import com.laytonsmith.core.exceptions.CRE.CREPluginInternalException;
 import com.laytonsmith.core.exceptions.ConfigRuntimeException;
 import com.laytonsmith.core.natives.interfaces.Mixed;
@@ -76,8 +78,12 @@ public class ChatFormatting {
 
 		public Mixed exec(Target t, Environment environment, Mixed... args) throws ConfigRuntimeException {
 			Static.checkPlugin("Vault", t);
+			MCOfflinePlayer offlinePlayer = Static.GetUser(args[1], t);
+			if(offlinePlayer == null) {
+				throw new CRENotFoundException(this.getName() + " could not get the offline player: " + args[0].val(), t);
+			}
 			return new CString(getChat(t).getPlayerPrefix(args[0].val(),
-					(OfflinePlayer) Static.GetUser(args[1], t).getHandle()), t);
+					(OfflinePlayer) offlinePlayer.getHandle()), t);
 		}
 
 		public String getName() {
@@ -98,8 +104,12 @@ public class ChatFormatting {
 
 		public Mixed exec(Target t, Environment environment, Mixed... args) throws ConfigRuntimeException {
 			Static.checkPlugin("Vault", t);
+			MCOfflinePlayer offlinePlayer = Static.GetUser(args[1], t);
+			if(offlinePlayer == null) {
+				throw new CRENotFoundException(this.getName() + " could not get the offline player: " + args[0].val(), t);
+			}
 			return new CString(getChat(t).getPlayerSuffix(args[0].val(),
-					(OfflinePlayer) Static.GetUser(args[1], t).getHandle()), t);
+					(OfflinePlayer) offlinePlayer.getHandle()), t);
 		}
 
 		public String getName() {

@@ -4,7 +4,7 @@ A [CommandHelper](https://github.com/enginehub/CommandHelper) extension providin
 Download the correct version for your version of CommandHelper:  
 CHVault 2.1.1 (CommandHelper 3.3.1 - 3.3.3)  
 CHVault 2.1.3 (CommandHelper 3.3.4 - 3.3.5)  
-CHVault 2.1.5 (CommandHelper 3.3.5)
+CHVault 2.1.6 (CommandHelper 3.3.5)
 
 ## Functions
 ### Permissions
