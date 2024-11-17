@@ -81,7 +81,9 @@ public class Permissions {
 		@Override
 		public String docs() {
 			return "boolean {player, permission, [world]} Checks the permission value of a player, optionally in a"
-					+ " specific world. When used on an offline player, the accuracy depends on the permission plugin.";
+					+ " specific world. When used on an offline player, the accuracy depends on the permission plugin."
+					+ " UUIDs are recommended for offline players."
+					+ " Will throw a NotFoundException when given an offline player name that does not exist.";
 		}
 
 		@Override
@@ -124,8 +126,10 @@ public class Permissions {
 
 		@Override
 		public String docs() {
-			return "array {player, [world]} Returns an array of groups that the player is in. When used on offline"
-					+ " players, the accuracy of this function is dependent on the permissions plugin.";
+			return "array {player, [world]} Returns an array of groups that the player is in."
+					+ " When used on offline players, the accuracy of this function is dependent on the permissions plugin."
+					+ " UUIDs are recommended for offline players."
+					+ " Will throw a NotFoundException when given an offline player name that does not exist.";
 		}
 
 		@Override

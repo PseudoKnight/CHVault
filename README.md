@@ -4,11 +4,13 @@ A [CommandHelper](https://github.com/enginehub/CommandHelper) extension providin
 Download the correct version for your version of CommandHelper:  
 CHVault 2.1.1 (CommandHelper 3.3.1 - 3.3.3)  
 CHVault 2.1.3 (CommandHelper 3.3.4 - 3.3.5)  
-CHVault 2.1.4 (CommandHelper 3.3.5)
+CHVault 2.1.5 (CommandHelper 3.3.5)
 
 ## Functions
 ### Permissions
-Uses Vault to extend the potential of permissions checking with group and multiworld support.
+Uses Vault to extend the potential of permissions checking with group and multiworld support.  
+UUIDs are recommended for offline players.  
+These will throw a NotFoundException when given an offline player name that does not exist.
 
 #### boolean vault_has_permission(player, permission, [world]);
 Checks the permission value of a player, optionally in a specific world.
